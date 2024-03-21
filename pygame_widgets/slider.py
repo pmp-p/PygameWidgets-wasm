@@ -6,6 +6,7 @@ import pygame_widgets
 from pygame_widgets.widget import WidgetBase
 from pygame_widgets.mouse import Mouse, MouseState
 
+gfxdraw_has_failed = False
 
 class Slider(WidgetBase):
     def __init__(self, win, x, y, width, height, **kwargs):
@@ -62,6 +63,7 @@ class Slider(WidgetBase):
                     self.value = max(min(self.value, self.max), self.min)
 
     def draw(self):
+        global gfxdraw_has_failed
         if not self._hidden:
             pygame.draw.rect(self.win, self.colour, (self._x, self._y, self._width, self._height))
 
@@ -80,8 +82,14 @@ class Slider(WidgetBase):
                 circle = (int(self._x + (self.value - self.min) / (self.max - self.min) * self._width),
                           self._y + self._height // 2)
 
-            gfxdraw.filled_circle(self.win, *circle, self.handleRadius, self.handleColour)
-            gfxdraw.aacircle(self.win, *circle, self.handleRadius, self.handleColour)
+            if not gfxdraw_has_failed:
+                try:
+                    gfxdraw.filled_circle(self.win, *circle, self.handleRadius, self.handleColour)
+                    gfxdraw.aacircle(self.win, *circle, self.handleRadius, self.handleColour)
+                    return
+                except:
+                    gfxdraw_has_failed = True
+            pygame.draw.circle(self.win, self.handleColour, circle, self.handleRadius)
 
     def contains(self, x, y):
         if self.vertical:

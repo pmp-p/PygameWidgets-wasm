@@ -5,6 +5,7 @@ import pygame_widgets
 from pygame_widgets.widget import WidgetBase
 from pygame_widgets.mouse import Mouse, MouseState
 
+gfxdraw_has_failed = False
 
 class Toggle(WidgetBase):
     def __init__(self, win, x, y, width, height, **kwargs):
@@ -37,6 +38,7 @@ class Toggle(WidgetBase):
                     self.toggle()
 
     def draw(self):
+        global gfxdraw_has_failed
         if not self._hidden:
             pygame.draw.rect(self.win, self.colour, (self._x, self._y, self._width, self._height))
 
@@ -49,9 +51,15 @@ class Toggle(WidgetBase):
                 ),
                 self._y + self._height // 2
             )
+            if not gfxdraw_has_failed:
+                try:
+                    gfxdraw.filled_circle(self.win, *circle, self.handleRadius, self.handleColour)
+                    gfxdraw.aacircle(self.win, *circle, self.handleRadius, self.handleColour)
+                    return
+                except:
+                    gfxdraw_has_failed = True
+            pygame.draw.circle(self.win, self.handleColour, circle, self.handleRadius)
 
-            gfxdraw.filled_circle(self.win, *circle, self.handleRadius, self.handleColour)
-            gfxdraw.aacircle(self.win, *circle, self.handleRadius, self.handleColour)
 
     def getValue(self):
         return self.value

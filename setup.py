@@ -20,5 +20,5 @@ setuptools.setup(
     ],
     python_requires='>=3.10',
     license='MIT',
-    install_requires=['pygame>=2.0.0']
+    install_requires=['pygame-ce>=2.0.0']
 )
