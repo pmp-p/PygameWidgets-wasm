@@ -133,74 +133,23 @@ class Button(WidgetBase):
     def draw(self):
         """ Display to surface """
         if not self._hidden:
-            if pygame.version.vernum[0] < 2:
-                borderRects = [
-                    (self._x + self.radius, self._y, self._width - self.radius * 2, self._height),
-                    (self._x, self._y + self.radius, self._width, self._height - self.radius * 2),
-                ]
+            pygame.draw.rect(
+                self.win, self.shadowColour,
+                (self._x + self.shadowDistance, self._y + self.shadowDistance, self._width, self._height),
+                border_radius=self.radius
+            )
 
-                borderCircles = [
-                    (self._x + self.radius, self._y + self.radius),
-                    (self._x + self.radius, self._y + self._height - self.radius),
-                    (self._x + self._width - self.radius, self._y + self.radius),
-                    (self._x + self._width - self.radius, self._y + self._height - self.radius)
-                ]
+            pygame.draw.rect(
+                self.win, self.borderColour, (self._x, self._y, self._width, self._height),
+                border_radius=self.radius
+            )
 
-                backgroundRects = [
-                    (
-                        self._x + self.borderThickness + self.radius,
-                        self._y + self.borderThickness,
-                        self._width - 2 * (self.borderThickness + self.radius),
-                        self._height - 2 * self.borderThickness
-                    ),
-                    (
-                        self._x + self.borderThickness,
-                        self._y + self.borderThickness + self.radius,
-                        self._width - 2 * self.borderThickness,
-                        self._height - 2 * (self.borderThickness + self.radius)
-                    )
-                ]
-
-                backgroundCircles = [
-                    (self._x + self.radius + self.borderThickness,
-                     self._y + self.radius + self.borderThickness),
-                    (self._x + self.radius + self.borderThickness,
-                     self._y + self._height - self.radius - self.borderThickness),
-                    (self._x + self._width - self.radius - self.borderThickness,
-                     self._y + self.radius + self.borderThickness),
-                    (self._x + self._width - self.radius - self.borderThickness,
-                     self._y + self._height - self.radius - self.borderThickness)
-                ]
-
-                for rect in borderRects:
-                    pygame.draw.rect(self.win, self.borderColour, rect)
-
-                for circle in borderCircles:
-                    pygame.draw.circle(self.win, self.borderColour, circle, self.radius)
-
-                for rect in backgroundRects:
-                    pygame.draw.rect(self.win, self.colour, rect)
-
-                for circle in backgroundCircles:
-                    pygame.draw.circle(self.win, self.colour, circle, self.radius)
-            else:
-                pygame.draw.rect(
-                    self.win, self.shadowColour,
-                    (self._x + self.shadowDistance, self._y + self.shadowDistance, self._width, self._height),
-                    border_radius=self.radius
-                )
-
-                pygame.draw.rect(
-                    self.win, self.borderColour, (self._x, self._y, self._width, self._height),
-                    border_radius=self.radius
-                )
-
-                pygame.draw.rect(
-                    self.win, self.colour, (self._x + self.borderThickness, self._y + self.borderThickness,
-                                            self._width - self.borderThickness * 2,
-                                            self._height - self.borderThickness * 2),
-                    border_radius=self.radius
-                )
+            pygame.draw.rect(
+                self.win, self.colour, (self._x + self.borderThickness, self._y + self.borderThickness,
+                                        self._width - self.borderThickness * 2,
+                                        self._height - self.borderThickness * 2),
+                border_radius=self.radius
+            )
 
             if self.image:
                 self.imageRect = self.image.get_rect()
